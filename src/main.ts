@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('FlashJob API')
     .setDescription('API documentation for FlashJob')
     .setVersion('1.0')
+    .addBearerAuth() // <--- AJOUTE CETTE LIGNE
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

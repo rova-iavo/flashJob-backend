@@ -22,6 +22,9 @@ export class CreateUserDto {
 }
 
 export class LoginDto {
+  @ApiProperty()
   email: string;
+
+  @ApiProperty()
   password_hash: string;
 }

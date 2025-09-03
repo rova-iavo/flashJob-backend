@@ -24,4 +24,14 @@ model User {
   bio           String?
   rating_avg    Float?   @default(0)
   created_at    DateTime @default(now())
+  token         Token? 
+}
+
+model Token {
+  id        Int    @id @default(autoincrement())
+  token     String
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id])
+  expired   Boolean  @default(false) 
+  createdAt DateTime @default(now())
 }
