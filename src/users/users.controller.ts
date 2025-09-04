@@ -1,10 +1,9 @@
 import { Controller, Get, Post, Body, Headers, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './create-user.dto';
-import { LoginDto } from './login.dto'; // adapte le chemin si besoin
+import { LoginDto } from './login.dto';
 import { AuthService } from '../auth/auth.service';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-
 
 @ApiTags('users')
 @Controller('users')
@@ -16,26 +15,28 @@ export class UsersController {
 
   @ApiBody({ type: CreateUserDto })
   @Post('signin')
-  async signin(@Body() createUserDto: CreateUserDto) {
+  signin(@Body() createUserDto: CreateUserDto) {
     return this.usersService.signin(createUserDto);
   }
 
   @ApiBody({ type: LoginDto })
   @Post('login')
-  async login(@Body() loginUserDto: LoginDto) {
-    return this.usersService.login(loginUserDto);
+  login(@Body() loginDto: LoginDto) {
+    return this.usersService.login(loginDto);
   }
-
+  
+  @ApiBearerAuth()
   @Post('logout')
-  async logout() {
-    return this.usersService.logout();
-  }
-
-  @Get()
-  async findAll(@Headers('authorization') authHeader: string) {
+  async logout(@Headers('authorization') authHeader: string) {
     if (!authHeader) throw new UnauthorizedException('Token required');
     const token = authHeader.replace('Bearer ', '');
-    this.authService.verifyToken(token);
+    return await this.usersService.logout(token);
+  }
+
+  @ApiBearerAuth()
+  @Get()
+  findAll() {
+    // Le guard vérifie le token automatiquement
     return this.usersService.findAll();
   }
 }
