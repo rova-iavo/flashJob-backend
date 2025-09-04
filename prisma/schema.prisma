@@ -32,6 +32,6 @@ model Token {
   token     String
   userId    Int    @unique
   user      User   @relation(fields: [userId], references: [id])
-  expired   Boolean  @default(false) 
+  is_expired   Boolean  @default(false) 
   createdAt DateTime @default(now())
 }

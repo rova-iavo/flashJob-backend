@@ -49,26 +49,27 @@ export class UsersService {
     // Met à jour ou crée le token pour cet utilisateur
     await prisma.token.upsert({
       where: { userId: user.id },
-      update: { token, expired: false },
-      create: { userId: user.id, token, expired: false },
+      update: { token, is_expired: false },
+      create: { userId: user.id, token, is_expired: false },
     });
 
     return { user, token };
   }
 
   async logout(token: string) {
+    
     // Vérifie et décode le token pour obtenir l'id de l'utilisateur
-    let payload: any;
+    let user: any;
     try {
-      payload = this.authService.verifyToken(token);
+      user = this.authService.verifyToken(token);
     } catch {
       throw new UnauthorizedException('Invalid token');
     }
 
     // Met à jour le token correspondant dans la base
     await prisma.token.updateMany({
-      where: { userId: payload.sub, expired: false },
-      data: { expired: true },
+      where: { userId: user.sub, is_expired: false },
+      data: { is_expired: true },
     });
 
     return { message: 'Logout successful' };
