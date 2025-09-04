@@ -19,7 +19,9 @@ model User {
   role          Role     @default(CLIENT)
   email         String   @unique
   password_hash String
-  username      String   @unique
+  firstname     String
+  lastname      String
+  is_subscribed Boolean  @default(false)
   avatar        String?
   bio           String?
   rating_avg    Float?   @default(0)

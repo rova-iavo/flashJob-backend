@@ -9,7 +9,13 @@ export class CreateUserDto {
   password_hash: string;
 
   @ApiProperty()
-  username: string;
+  firstname: string;
+
+  @ApiProperty()
+  lastname: string;
+
+  @ApiProperty({ default: false })
+  is_subscribed?: boolean;
 
   @ApiProperty({ required: false })
   avatar?: string;

@@ -17,7 +17,9 @@ export class UsersService {
   async signin(createUserDto: CreateUserDto) {
     const user = await prisma.user.create({
       data: {
-        username: createUserDto.username,
+        firstname: createUserDto.firstname,
+        lastname: createUserDto.lastname,
+        is_subscribed: createUserDto.is_subscribed ?? false,
         email: createUserDto.email,
         password_hash: createUserDto.password_hash,
         role: createUserDto.role,
