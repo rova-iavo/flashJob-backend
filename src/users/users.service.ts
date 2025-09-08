@@ -1,9 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CreateUserDto } from './create-user.dto';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto } from './login.dto'; 
-import { create } from 'node:domain';
 
 const prisma = new PrismaClient();
 
@@ -16,6 +15,14 @@ export class UsersService {
   }
 
   async signin(createUserDto: CreateUserDto) {
+    // Vérifier si l'email existe déjà
+    const existingUser = await prisma.user.findUnique({
+      where: { email: createUserDto.email },
+    });
+    if (existingUser) {
+      throw new ConflictException('Cet email existe déjà');
+    }
+
     const user = await prisma.user.create({
       data: {
         firstname: createUserDto.firstname,
