@@ -1,4 +1,4 @@
 export enum Role {
   CLIENT = 'CLIENT',
-  PRESTATAIRE = 'PRESTATAIRE',
+  FREELANCER = 'FREELANCER',
 }

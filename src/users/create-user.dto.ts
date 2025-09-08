@@ -17,8 +17,13 @@ export class CreateUserDto {
   @ApiProperty({ default: false })
   is_subscribed?: boolean;
 
-  @ApiProperty({ required: false })
-  avatar?: string;
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    required: false,
+    description: 'Avatar image file'
+  })
+  avatar?: any;
 
   @ApiProperty({ required: false })
   bio?: string;

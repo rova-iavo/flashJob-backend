@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, UnauthorizedException, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './create-user.dto';
 import { LoginDto } from './login.dto';
 import { AuthService } from '../auth/auth.service';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import express from 'express';
 
 @ApiTags('users')
@@ -15,9 +16,15 @@ export class UsersController {
   ) {}
 
   @ApiBody({ type: CreateUserDto })
+  @ApiConsumes('multipart/form-data')
   @Post('signin')
-  signin(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.signin(createUserDto);
+  @UseInterceptors(FileInterceptor('avatar'))
+  async signin(@Body() createUserDto: CreateUserDto, @UploadedFile() avatar: Express.Multer.File) {
+    if (avatar) {
+      // Convert buffer to base64 string
+      createUserDto.avatar = avatar.buffer.toString('base64');
+    }
+    return await this.usersService.signin(createUserDto);
   }
 
   @ApiBody({ type: LoginDto })
