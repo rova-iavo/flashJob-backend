@@ -50,5 +50,11 @@ export class UsersController {
     // Le guard vérifie le token automatiquement
     return this.usersService.findAll();
   }
+
+  @ApiBody({ schema: { type: 'object', properties: { email: { type: 'string' } } } })
+  @Post('resend-email')
+  async resendEmail(@Body('email') email: string) {
+    return await this.usersService.sendEmailToUser(email);
+  }
 }
 
