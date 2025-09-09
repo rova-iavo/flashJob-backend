@@ -30,6 +30,9 @@ export class CreateUserDto {
 
   @ApiProperty({ enum: Role, required: false })
   role?: Role;
+  
+  @ApiProperty({ required: false })
+  supabaseUserId?: string;
 }
 
 export class LoginDto {

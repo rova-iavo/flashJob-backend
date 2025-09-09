@@ -10,18 +10,17 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  role          Role     @default(CLIENT)
-  email         String   @unique
-  password_hash String
-  firstname     String
-  lastname      String
-  is_subscribed Boolean  @default(false)
-  avatar        String?
-  bio           String?
-  rating_avg    Float?   @default(0)
-  created_at    DateTime @default(now())
-  token         Token?
+  id             Int     @id @default(autoincrement())
+  firstname      String
+  lastname       String
+  is_subscribed  Boolean @default(false)
+  email          String  @unique
+  password_hash  String
+  role           String
+  avatar         String?
+  bio            String?
+  supabaseUserId String  @unique
+  token          Token? 
 }
 
 model Token {
