@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { OffreService } from './offre.service';
 import { CreateOffreDto } from './dto/create-offre.dto';
 import { UpdateOffreDto } from './dto/update-offre.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger'; 
 
 @ApiTags('offres')
 @Controller('offres')
@@ -10,6 +12,8 @@ export class OffreController {
   constructor(private readonly offreService: OffreService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Créer une nouvelle offre' })
   @ApiResponse({ status: 201, description: 'Offre créée.' })
   create(@Body() dto: CreateOffreDto) {
@@ -31,6 +35,8 @@ export class OffreController {
   }
 
   @Patch(':id_offre')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Modifier une offre' })
   @ApiResponse({ status: 200, description: 'Offre modifiée.' })
   update(@Param('id_offre') id: string, @Body() dto: UpdateOffreDto) {
@@ -38,6 +44,8 @@ export class OffreController {
   }
 
   @Delete(':id_offre')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Supprimer une offre' })
   @ApiResponse({ status: 200, description: 'Offre supprimée.' })
   remove(@Param('id_offre') id: string) {

@@ -56,36 +56,27 @@ model prestation {
 
 // Nouvelle table pour les offres
 model Offre {
-  id_offre                     Int          @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   prestationId                    Int          // Clé étrangère vers le prestation
   nom_offre                    String
   prix                         Float        // decimal(10,2)
   delai_livraison_offre_heures Int
   is_popular                   Boolean
+  caracteristiques  String[]
 
   prestation         prestation          @relation(fields: [prestationId], references: [id_prestation])
-  caracteristiques Caracteristique[] // Relation avec la table caracteristiques
-}
-
-// Nouvelle table pour les caractéristiques
-model Caracteristique {
-  id_caracteristique Int     @id @default(autoincrement())
-  offreId            Int     // Clé étrangère vers l'offre
-  nom_caracteristique String
-
-  offre Offre @relation(fields: [offreId], references: [id_offre])
 }
 
 // Nouvelle table pour les avis
 model Avis {
   id_avis      Int      @id @default(autoincrement())
-  utilisateurId Int     // Clé étrangère vers l'utilisateur
+  userId Int     // Clé étrangère vers l'utilisateur
   prestationId    Int      // Clé étrangère vers le prestation
   note         Float    // decimal(2,1)
   commentaire  String
   date_avis    DateTime @default(now())
 
-  utilisateur User    @relation(fields: [utilisateurId], references: [id])
+  user User    @relation(fields: [userId], references: [id])
   prestation     prestation @relation(fields: [prestationId], references: [id_prestation])
 }
 

@@ -15,4 +15,7 @@ export class UpdateOffreDto {
 
   @ApiPropertyOptional()
   is_popular?: boolean;
+
+  @ApiPropertyOptional({ type: [String] })
+  caracteristiques?: string[];
 }

@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CategorieService } from './categorie.service';
 import { CreateCategorieDto } from './dto/create-categorie.dto';
 import { UpdateCategorieDto } from './dto/update-categorie.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -10,6 +12,8 @@ export class CategorieController {
   constructor(private readonly categorieService: CategorieService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Créer une nouvelle catégorie' })
   @ApiResponse({ status: 201, description: 'Catégorie créée.' })
   create(@Body() dto: CreateCategorieDto) {
@@ -31,6 +35,8 @@ export class CategorieController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Modifier une catégorie' })
   @ApiResponse({ status: 200, description: 'Catégorie modifiée.' })
   update(@Param('id') id: string, @Body() dto: UpdateCategorieDto) {
@@ -38,6 +44,8 @@ export class CategorieController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Supprimer une catégorie' })
   @ApiResponse({ status: 200, description: 'Catégorie supprimée.' })
   remove(@Param('id') id: string) {

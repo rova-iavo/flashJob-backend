@@ -15,15 +15,15 @@ export class OffreService {
     return this.prisma.offre.findMany();
   }
 
-  async findById(id_offre: number) {
-    return this.prisma.offre.findUnique({ where: { id_offre } });
+  async findById(id: number) {
+    return this.prisma.offre.findUnique({ where: { id } });
   }
 
-  async update(id_offre: number, data: UpdateOffreDto) {
-    return this.prisma.offre.update({ where: { id_offre }, data });
+  async update(id: number, data: UpdateOffreDto) {
+    return this.prisma.offre.update({ where: {id }, data });
   }
 
-  async remove(id_offre: number) {
-    return this.prisma.offre.delete({ where: { id_offre } });
+  async remove(id: number) {
+    return this.prisma.offre.delete({ where: {id } });
   }
 }

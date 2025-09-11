@@ -15,4 +15,7 @@ export class CreateOffreDto {
 
   @ApiProperty()
   is_popular: boolean;
+
+  @ApiProperty({ type: [String] })
+  caracteristiques: string[];
 }

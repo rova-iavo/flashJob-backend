@@ -6,9 +6,18 @@ import { AuthMiddleware } from './auth/auth.middleware';
 import { CategorieModule } from './categorie/categorie.module';
 import { PrestationModule } from './prestation/prestation.module';
 import { OffreModule } from './offre/offre.module';
+import { AvisModule } from './avis/avis.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, CategorieModule, PrestationModule, OffreModule],
+  imports: [
+    AuthModule,
+    UsersModule, 
+    CategorieModule, 
+    PrestationModule, 
+    OffreModule, 
+    AvisModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
