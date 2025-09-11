@@ -1,0 +1,38 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id             Int     @id @default(autoincrement())
+  firstname      String
+  lastname       String
+  is_subscribed  Boolean @default(false)
+  email          String  @unique
+  password_hash  String
+  role           String
+  avatar         String?
+  bio            String?
+  supabaseUserId String  @unique
+  token          Token? 
+}
+
+model Token {
+  id         Int      @id @default(autoincrement())
+  token      String
+  userId     Int      @unique
+  is_expired Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  CLIENT
+  FREELANCER
+}

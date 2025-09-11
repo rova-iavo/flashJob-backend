@@ -10,17 +10,19 @@ datasource db {
 }
 
 model User {
-  id             Int     @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   firstname      String
   lastname       String
-  is_subscribed  Boolean @default(false)
-  email          String  @unique
+  is_subscribed  Boolean  @default(false)
+  email          String   @unique
   password_hash  String
   role           String
   avatar         String?
   bio            String?
-  supabaseUserId String  @unique
+  supabaseUserId String   @unique
   token          Token? 
+  prestations       prestation[] // Ajout de la relation avec la table prestations
+  avis           Avis[]    // Ajout de la relation avec la table avis
 }
 
 model Token {
@@ -32,7 +34,64 @@ model Token {
   user       User     @relation(fields: [userId], references: [id])
 }
 
-enum Role {
-  CLIENT
-  FREELANCER
+// Nouvelle table pour les prestations
+model prestation {
+  id_prestation                     Int      @id @default(autoincrement())
+  userId                         Int      // Clé étrangère vers l'utilisateur
+  categorieId                    Int      // Clé étrangère vers la catégorie
+  prestation_image                  String
+  nom_prestation                    String
+  description                    String
+  note_moyenne                   Float    // decimal(2,1)
+  nombre_avis                    Int
+  delai_livraison_prestation_heures Int
+  paiement_securise              Boolean
+  express                        Boolean
+
+  user        User       @relation(fields: [userId], references: [id])
+  categorie   Categorie  @relation(fields: [categorieId], references: [id])
+  offres      Offre[]    // Relation avec la table offres
+  avis        Avis[]     // Relation avec la table avis
+}
+
+// Nouvelle table pour les offres
+model Offre {
+  id_offre                     Int          @id @default(autoincrement())
+  prestationId                    Int          // Clé étrangère vers le prestation
+  nom_offre                    String
+  prix                         Float        // decimal(10,2)
+  delai_livraison_offre_heures Int
+  is_popular                   Boolean
+
+  prestation         prestation          @relation(fields: [prestationId], references: [id_prestation])
+  caracteristiques Caracteristique[] // Relation avec la table caracteristiques
+}
+
+// Nouvelle table pour les caractéristiques
+model Caracteristique {
+  id_caracteristique Int     @id @default(autoincrement())
+  offreId            Int     // Clé étrangère vers l'offre
+  nom_caracteristique String
+
+  offre Offre @relation(fields: [offreId], references: [id_offre])
+}
+
+// Nouvelle table pour les avis
+model Avis {
+  id_avis      Int      @id @default(autoincrement())
+  utilisateurId Int     // Clé étrangère vers l'utilisateur
+  prestationId    Int      // Clé étrangère vers le prestation
+  note         Float    // decimal(2,1)
+  commentaire  String
+  date_avis    DateTime @default(now())
+
+  utilisateur User    @relation(fields: [utilisateurId], references: [id])
+  prestation     prestation @relation(fields: [prestationId], references: [id_prestation])
+}
+
+// Nouvelle table pour les catégories
+model Categorie {
+  id   Int       @id @default(autoincrement())
+  nom  String
+  prestations prestation[] // Relation avec la table prestations
 }

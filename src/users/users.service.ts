@@ -9,7 +9,9 @@ const prisma = new PrismaClient();
 
 const supabaseUrl = 'https://qyvaafsilhhvyjvqfmgh.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5dmFhZnNpbGhodnlqdnFmbWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4OTg1MDEsImV4cCI6MjA3MjQ3NDUwMX0.TEHM_JmWxIRkKM-ASLMknLzS-9LhALpMJwLF5oCjRMA';
+const supabaseAdminKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5dmFhZnNpbGhodnlqdnFmbWdoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg5ODUwMSwiZXhwIjoyMDcyNDc0NTAxfQ.rEuEpEbQmaxY39epcnkV6gyZSHex6VwrjOm_Ns5AQZo'
 const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseAdmin = createClient(supabaseUrl, supabaseAdminKey);
 
 @Injectable()
 export class UsersService {
@@ -17,6 +19,11 @@ export class UsersService {
 
   async findAll() {
     return prisma.user.findMany();
+  }
+
+  async findUserByEmail(email: string) {
+    console.log("Finding user by email:", email);
+    return prisma.user.findUnique({ where: { email } });
   }
 
   async signin(createUserDto: CreateUserDto) {
@@ -28,7 +35,7 @@ export class UsersService {
       throw new ConflictException('Cet email existe déjà');
     }
 
-    // Inscription sur Supabase et envoi de l'email de vérification
+    // envoi de l'email de vérification
     const ret = await this.sendEmailToUser(createUserDto.email);
     console.log(ret);
 
@@ -36,7 +43,7 @@ export class UsersService {
       throw new ConflictException('Impossible de récupérer l\'ID utilisateur Supabase.');
     }
 
-    // Création de l'utilisateur local avec l'ID Supabase
+    // Création de l'utilisateur dans Supabase
     const user = await prisma.user.create({
       data: {
         firstname: createUserDto.firstname,
@@ -103,7 +110,6 @@ export class UsersService {
 
   async sendEmailToUser(email: string) {
     // Génère un mot de passe temporaire pour Supabase (juste pour la vérification email)
-  
     const tempPassword = Math.random().toString(36).slice(-10);
     console.log("Temporary password generated for user registration:", tempPassword);
     console.log("Registering user with email:", email);
@@ -125,14 +131,13 @@ export class UsersService {
     };
   }
 
-  async isEmailConfirmed(userId: string) {
-    console.log('MAKATO VE?');
-    const { data, error } = await supabase.auth.admin.getUserById(userId);
-
+  async isEmailConfirmed1(userId: string) {
+    const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
     if (error) {
       throw new Error(error.message);
     }
-
-    return data.user.email_confirmed_at !== null;
+    console.log('user= ',data.user.email);
+    if(data.user.email_confirmed_at !== null && data.user.email_confirmed_at !== undefined) return {is_confirmed:true, email_user:data.user.email};
+    return {is_confirmed:false, email_user:data.user.email};
   }
 }

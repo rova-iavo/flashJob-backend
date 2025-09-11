@@ -56,5 +56,15 @@ export class UsersController {
   async resendEmail(@Body('email') email: string) {
     return await this.usersService.sendEmailToUser(email);
   }
+
+  @ApiBody({ schema: { type: 'object', properties: { email: { type: 'string' } } } })
+  @Post('is-email-confirmed')
+  async isEmailConfirmed(@Body('email') email: string) {
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user || !user.supabaseUserId) {
+      throw new UnauthorizedException('User not found or Supabase ID missing');
+    }
+    return await this.usersService.isEmailConfirmed1(user.supabaseUserId);
+  }
 }
 

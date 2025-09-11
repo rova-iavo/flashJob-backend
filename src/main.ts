@@ -18,7 +18,7 @@ async function bootstrap() {
     .setTitle('FlashJob API')
     .setDescription('API documentation for FlashJob')
     .setVersion('1.0')
-    .addBearerAuth() // <--- AJOUTE CETTE LIGNE
+    .addBearerAuth() 
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
