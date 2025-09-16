@@ -8,6 +8,7 @@ import { PrestationModule } from './prestation/prestation.module';
 import { OffreModule } from './offre/offre.module';
 import { AvisModule } from './avis/avis.module';
 import { AuthModule } from './auth/auth.module';
+import { BrouillonModule } from './brouillon/brouillon.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { AuthModule } from './auth/auth.module';
     CategorieModule, 
     PrestationModule, 
     OffreModule, 
-    AvisModule
+    AvisModule,
+    BrouillonModule
   ],
   controllers: [AppController],
   providers: [AppService],

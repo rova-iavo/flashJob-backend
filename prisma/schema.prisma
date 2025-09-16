@@ -86,3 +86,10 @@ model Categorie {
   nom  String
   prestations prestation[] // Relation avec la table prestations
 }
+
+model Brouillon {
+  id           Int      @id @default(autoincrement())
+  service      Json
+  liste_offre  Json[]
+  createdAt    DateTime @default(now())
+}
