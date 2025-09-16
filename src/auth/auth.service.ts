@@ -9,7 +9,7 @@ export class AuthService {
     return jwt.sign(
       { sub: payload.id, email: payload.email, role: payload.role },
       JWT_SECRET,
-      { expiresIn: '10m' },
+      { expiresIn: '1d' },
     );
   }
 
